@@ -5,6 +5,7 @@ import med.voll.api.doctor.Doctor;
 import med.voll.api.doctor.DoctorRepository;
 import med.voll.api.doctor.MedicalRegisterData;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -15,6 +16,7 @@ public class DoctorsController {
     private DoctorRepository doctorRepository;
 
     @PostMapping
+    @Transactional
     public void register(@RequestBody MedicalRegisterData data){
 
        doctorRepository.save(new Doctor(data));
