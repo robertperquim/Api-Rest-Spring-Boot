@@ -1,6 +1,7 @@
 package med.voll.api.controller;
 
 
+import jakarta.validation.Valid;
 import med.voll.api.doctor.Doctor;
 import med.voll.api.doctor.DoctorRepository;
 import med.voll.api.doctor.MedicalRegisterData;
@@ -9,7 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("medicos")
+@RequestMapping("doctors")
 public class DoctorsController {
 
     @Autowired
@@ -17,7 +18,7 @@ public class DoctorsController {
 
     @PostMapping
     @Transactional
-    public void register(@RequestBody MedicalRegisterData data){
+    public void register(@RequestBody @Valid MedicalRegisterData data){
 
        doctorRepository.save(new Doctor(data));
     }
