@@ -6,6 +6,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import med.voll.api.address.Adress;
 
+import javax.swing.text.StyledEditorKit;
+
 @Table(name = "doctor")
 @Entity(name = "Doctor")
 @Getter
@@ -27,8 +29,10 @@ public class Doctor {
    @Embedded
    private Adress adress;
 
-    public Doctor(MedicalRegisterData data) {
+   private boolean active;
 
+    public Doctor(MedicalRegisterData data) {
+         this.active = true;
          this.name = data.name();
          this.email = data.email();
          this.telephone = data.telephone();
@@ -48,5 +52,9 @@ public class Doctor {
             this.adress.updateInformation(data.addressDate());
         }
 
+    }
+
+    public void setInactive() {
+        this.active = false;
     }
 }
