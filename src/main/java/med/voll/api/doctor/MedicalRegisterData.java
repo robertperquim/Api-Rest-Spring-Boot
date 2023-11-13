@@ -16,7 +16,8 @@ public record MedicalRegisterData(
         @NotBlank
         @Email
         String email,
-
+        @NotBlank
+        String telephone,
         @NotBlank
         @Pattern(regexp = "\\d{4,6}") //significa que o crm sao digitos e sao de 4 a 6 digitos
         String crm,
