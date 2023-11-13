@@ -3,6 +3,7 @@ package med.voll.api.doctor;
 //DTO para metodo get
 
 public record MedicalListData(
+        Long id,
         String name,
         String email,
         String telephone,
@@ -11,6 +12,6 @@ public record MedicalListData(
 ) {
 
     public MedicalListData(Doctor doctor){
-        this(doctor.getName(), doctor.getEmail(), doctor.getTelephone(), doctor.getCrm(), doctor.getSpeciality());
+        this(doctor.getId(), doctor.getName(), doctor.getEmail(), doctor.getTelephone(), doctor.getCrm(), doctor.getSpeciality());
     }
 }
