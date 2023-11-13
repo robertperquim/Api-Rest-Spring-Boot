@@ -27,15 +27,23 @@ public class DoctorsController {
 
     @GetMapping
     public Page<MedicalListData> doctorList (@PageableDefault(size = 10, sort = {"name"}) Pageable pages){
-        return doctorRepository.findAll(pages).map(MedicalListData::new);
+        return doctorRepository.findAllByActiveTrue(pages).map(MedicalListData::new);
     }
 
     @PutMapping
     @Transactional
     public void updateDoctor(@RequestBody @Valid MedicalUpdateData data){
         Doctor doctor = doctorRepository.getReferenceById(data.id());
-
         doctor.updateInformation(data);
+    }
+
+    //exclusao Logica inativa o medico e nao apaga os dados do banco
+    @DeleteMapping("/{id}")
+    @Transactional
+    public void deleted(@PathVariable Long id){
+        Doctor doctor = doctorRepository.getReferenceById(id);
+        doctor.setInactive();
+
     }
 
 }
