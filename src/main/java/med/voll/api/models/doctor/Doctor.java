@@ -1,12 +1,10 @@
-package med.voll.api.doctor;
+package med.voll.api.models.doctor;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import med.voll.api.address.Adress;
-
-import javax.swing.text.StyledEditorKit;
+import med.voll.api.models.address.Adress;
 
 @Table(name = "doctor")
 @Entity(name = "Doctor")
