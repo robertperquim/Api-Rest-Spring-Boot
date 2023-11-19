@@ -8,8 +8,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.util.UriComponentsBuilder;
+
+import java.net.URI;
+
 
 
 @RestController
@@ -21,30 +26,43 @@ public class DoctorsController {
 
     @PostMapping
     @Transactional
-    public void register(@RequestBody @Valid MedicalRegisterData data){
+    public ResponseEntity register(@RequestBody @Valid MedicalRegisterData data, UriComponentsBuilder uriComponentsBuilder){
+        Doctor doctor = new Doctor(data);
+        doctorRepository.save(doctor);
 
-       doctorRepository.save(new Doctor(data));
+        URI uri = uriComponentsBuilder.path("doctors/{id}").buildAndExpand(doctor.getId()).toUri();
+        return ResponseEntity.created(uri).body(new DoctorDetalingData(doctor));
     }
 
     @GetMapping
-    public Page<MedicalListData> doctorList (@PageableDefault(size = 10, sort = {"name"}) Pageable pages){
-        return doctorRepository.findAllByActiveTrue(pages).map(MedicalListData::new);
+    public ResponseEntity<Page<MedicalListData>> doctorList (@PageableDefault(size = 10, sort = {"name"}) Pageable pages){
+          Page<MedicalListData> page = doctorRepository.findAllByActiveTrue(pages).map(MedicalListData::new);
+          return ResponseEntity.ok(page);
     }
 
     @PutMapping
     @Transactional
-    public void updateDoctor(@RequestBody @Valid MedicalUpdateData data){
+    public ResponseEntity updateDoctor(@RequestBody @Valid MedicalUpdateData data){
         Doctor doctor = doctorRepository.getReferenceById(data.id());
         doctor.updateInformation(data);
+
+        return ResponseEntity.ok(new DoctorDetalingData(doctor));
     }
 
     //exclusao Logica inativa o medico e nao apaga os dados do banco
-    @DeleteMapping("/{id}")
+    @DeleteMapping("delete/{id}")
     @Transactional
-    public void deleted(@PathVariable Long id){
+    public ResponseEntity deleted(@PathVariable Long id){
         Doctor doctor = doctorRepository.getReferenceById(id);
         doctor.setInactive();
-
+        return ResponseEntity.noContent().build();
     }
 
+    @GetMapping("/{id}")
+    @Transactional  // Colocando transasional funcional pois o spring cuida  do gerenciamento de sessões.
+    public ResponseEntity detalingDoctor(@PathVariable Long id){
+        var doctor = doctorRepository.getReferenceById(id);
+
+        return ResponseEntity.ok(new DoctorDetalingData(doctor));
+    }
 }
